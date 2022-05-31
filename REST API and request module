@@ -1,0 +1,75 @@
+from requests import get
+import requests
+import json
+API_kEY = "4d79ababfb7242b78806141b5d9ab858"
+
+def news_search(q,sources):
+    main_url = "https://newsapi.org/v2/everything"
+    
+    data = {
+        "apiKey":API_kEY ,
+        "q": q,
+        "source" :sources
+    }
+
+    response = get(main_url, params=data)
+    #print(response.text)
+    news_json= response.json()
+    news_json_1 = news_json["articles"]
+    return (news_json_1)
+
+def top_headline(q,sources):
+    main_url = "https://newsapi.org/v2/top-headlines"
+    
+    data = {
+        "apiKey":API_kEY ,
+        "q": q,
+        "source" :sources
+    }
+
+    response = get(main_url, params=data)
+    #print(response.text)
+    news_json = response.json()
+    news_json_2 = news_json["articles"]
+    return (news_json_2)
+
+def list_of_title():
+    result1 = []
+    for i in news_search("ukraine","Reuters"):  # recursion
+        result1.append(i["title"])
+    return (result1)
+
+from requests import get
+class NewsAPI:
+    
+    def __init__(self, api_key):
+        self._api_key = "4d79ababfb7242b78806141b5d9ab858"
+    def news_search(self,q,sources):
+        main_url = "https://newsapi.org/v2/everything"
+    
+        data = {
+            "apiKey":self._api_key ,
+            "q": q,
+            "source" :sources
+        }
+
+        response = get(main_url, params=data)
+        #print(response.text)
+        news_json= response.json()
+        news_json_1 = news_json["articles"]
+        return (news_json_1)
+
+    def top_headlines(self,q,sources):
+        main_url = "https://newsapi.org/v2/top-headlines"
+    
+        data = {
+            "apiKey":self._api_key ,
+            "q": q,
+            "source" :sources
+        }
+
+        response = get(main_url, params=data)
+        #print(response.text)
+        news_json = response.json()
+        news_json_2 = news_json["articles"]
+        return (news_json_2)

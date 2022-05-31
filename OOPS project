@@ -1,0 +1,18 @@
+class Account:
+    initial_balance = 0
+    def __init__(self,owner,balance): # Update the argument list
+        self._owner = owner
+        self._balance = balance
+    
+    
+    def deposit(self,deposite_amount): # Update the argument list
+        self._balance += deposite_amount
+        
+    def withdraw(self,withdraw_amount):
+        if withdraw_amount > self._balance:
+            return ("not sufficent balance")
+        else:
+            self._balance -= withdraw_amount
+  
+    def __repr__(self):
+        return f" Account owner: {self._owner} \n Account balance: ${self._balance}"

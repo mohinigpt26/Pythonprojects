@@ -1,0 +1,19 @@
+#Southridge video, DVD rental Calculator
+ontime = input("was video returned before 8 PM? y or n :").lower()
+days_rented = int(input("how many days was video rented?"))
+day_rented = input("what day was the video rented?").capitalize()
+cost_per_day = 1.59
+
+if ontime == 'n':
+    days_rented = days_rented + 1          # discount means (% less in actual amount = (1-discount) 
+
+if day_rented == "Sunday":
+    discount = 0.3
+elif day_rented == "Thursday":
+    discount = 0.5
+else:
+    discount = 0
+
+final_amount = days_rented * cost_per_day * (1 - discount)
+
+print(f"Final amount is {final_amount}")

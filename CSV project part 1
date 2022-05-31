@@ -1,0 +1,20 @@
+import csv
+matrix = []
+sum_of_cured= 0
+sum_of_confirmed = 0
+sum_of_deaths = 0
+with open("covid_19_india.csv") as fh:
+    rd = csv.reader(fh) # read the file in CSV
+    for i, row in enumerate(rd):
+        if i == 0:
+            continue
+        matrix.append([int(c) for c in row[-3:]])
+#print(matrix)
+for row in matrix:
+    for i in row:
+        sum_of_cured  += row[0]
+        sum_of_deaths += row[1]
+        sum_of_confirmed += row[2]
+print("total cured so far :",sum_of_cured )
+print("Total deaths so far:",sum_of_deaths)
+print("Total confirmed cases:",sum_of_confirmed)

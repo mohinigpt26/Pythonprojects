@@ -1,0 +1,145 @@
+import sqlite3
+from requests import get 
+class NewsApp:
+    def __init__(self, apikey, dbpath):
+        self._apikey =  apikey
+        ## use this connection object for all transactions
+        self.conn = sqlite3.connect(dbpath)
+    
+
+
+    def create_tables(self):
+        self.c = self.conn.cursor()
+        ## Create the table structure as described in the documentation
+        self.c.execute("""CREATE TABLE User (
+            userid INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            Email TEXT NOT NULL UNIQUE,
+            sources TEXT,
+            domains TEXT,
+            excludeDomains TEXT
+        );
+        """)
+        
+        self.c.execute("""CREATE TABLE Topics (
+            topicid INTEGER PRIMARY KEY AUTOINCREMENT,
+            userid INTEGER,
+            q TEXT,
+            FOREIGN KEY (userid) REFERENCES User (id)
+         );
+         """)
+        
+        self.c.close()
+
+    def add_user(self):
+        self.c = self.conn.cursor()
+        ## Implement add user user functionality to create a user and store in database
+        ## Implement this step by step, test functionality with name, email and then add preferences
+        #self.c.execute("ALTER TABLE User ADD UNIQUE (Email)")
+        Name = input("enter your name:")
+        email = input("enter your email:")
+        data  = [Name,email]
+        self.c.execute(" INSERT INTO User (name,Email) VALUES (?,?);",data)
+        self.c.execute("SELECT * FROM User")
+        print(self.c.fetchall())
+        self.conn.commit()
+        self.c.close()
+        print("successfully added .")
+        
+    def update_preferences(self, userid):
+        self.c = self.conn.cursor()
+        ## Implement update preferences
+        source = input("enter source:")
+        domain = input("enter domain:")
+        excludeDomain = input("enter excludeDomain:")
+        self.c.execute(f""" UPDATE User SET sources = "{source}" ,domains = "{domain}",excludeDomains = "{excludeDomain}"
+        WHERE userid = {userid}
+        """)
+        
+        self.c.execute("SELECT * FROM User")
+        print(self.c.fetchall())
+        self.conn.commit()
+        self.c.close()
+        
+    def add_topic(self, userid, topic):
+        # add topic to Topics table
+        self.c = self.conn.cursor()
+        data = [userid,topic]
+        self.c.execute(" INSERT INTO Topics (userid,q) VALUES (?,?)",data)
+        self.c.execute("SELECT * FROM Topics ")
+        print(self.c.fetchall())
+        self.conn.commit()
+        self.c.close()
+        
+    def get_topics(self, userid):
+        ## return list of topics corresponding to userid from topics table
+        self.c = self.conn.cursor()
+        self.c.execute(f"SELECT q FROM Topics WHERE userid = {userid}")
+        print(self.c.fetchall())
+        self.c.close()
+        
+    def get_preferences(self, userid):
+        ## return name, email, preferences
+        self.c = self.conn.cursor()
+        self.c.execute(f"""SELECT name,Email,sources, domains, excludeDomains  FROM User  WHERE userid = {userid}""")
+        print(self.c.fetchone())
+        self.c.close()
+        
+    def fetch_news(self, q, preference): # Fetch one news based on q and preference
+        ## Fetch and return news about topic q, along with preferences
+        ## You can use get_preference function defined above
+        self.c = self.conn.cursor()
+        main_url = "https://newsapi.org/v2/everything"
+    
+        data = {
+            "apiKey": self._apikey,
+            "q": q,
+            "source" :preference,
+            
+        }
+
+        response = get(main_url, params=data)
+        news_json= response.json()
+        news_json_1 = news_json["articles"]
+        result = []
+        for i in news_json_1:
+            result.append(i["title"])
+        print(result[0])
+        return (result)
+    
+    def get_news_feed(self, userid):
+        # Fetch all topics for a user from DB and then fetch_news for all topics
+        self.c = self.conn.cursor()
+        self.c.execute(f"SELECT q FROM Topics WHERE userid = {userid}") # here q is a list.
+        #print(self.c.fetchall())
+        q = self.c.fetchall()
+        
+        final_result = []
+        result = []
+        if range(len(q)) != 0:
+            for i in q:
+                main_url = "https://newsapi.org/v2/everything"
+    
+                data = {
+                    "apiKey": self._apikey,
+                    "q": i,
+            
+                }
+
+                response = get(main_url, params=data)
+                news_json= response.json()
+                news_json_1 = news_json["articles"]
+                
+                for j in news_json_1:
+                    result.append(j["title"])
+                result.append("***********next topic**************")
+                #print(result)
+            final_result.append(result)
+            return(final_result)
+                
+        else:
+            return("none")
+        
+        
+        self.c.close()
+        

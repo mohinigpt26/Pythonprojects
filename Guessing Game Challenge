@@ -1,0 +1,20 @@
+import random
+number = random.randint(1, 100) # Random number will be stored in this variable
+count = 0
+guess = int()
+while number != guess:
+    guess = int(input("Guess  the  number between 1 to 100: "))
+    if (number < 1) or (number > 100):
+        print("OUT OF BOUNDS")
+    
+    elif (number > guess):
+        print("Go higher on the next guess")
+    
+    elif (number < guess):
+        print("Go lower on the next guess")
+    
+    else:
+        print("you've guessed correctly")
+    
+    count += 1    
+print("it took ",count," attempt to guess the correct number.")

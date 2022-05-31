@@ -1,0 +1,23 @@
+def hra_exemption():
+    basic_salary = int(input(" basic salary recevied: "))
+    actual_hra   = int(input("HRA recevied : "))
+    dearness_allowance = int(input("Dearness_Allowance (DA) recevied:" ))
+    actual_rent = int(input("Total Rent Paid: "))
+    metro_city = input("Do you live in metro city ? Y & N:" ).upper()
+    
+    print("HRA recevied : ", actual_hra)
+    
+    if "Y" in metro_city:
+        x =  0.5*(( basic_salary+dearness_allowance))
+        print("50% of basic salary: ",x)
+    else:
+        x = 0.4*(( basic_salary+dearness_allowance))
+        print("40% of basic salary: ",x)
+
+    rent = (actual_rent-0.1*(basic_salary+dearness_allowance))
+    print("Excess of rent paid over 10% of salary: ",rent)
+    
+    print(" Amount of exempted HRA: ", min(rent,x,actual_hra))
+    
+    hra = actual_hra- min(rent,x,actual_hra)
+    print("HRA chargeable to tax :",hra)
