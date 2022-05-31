@@ -1,0 +1,33 @@
+product_list = ["Edible oil", "Fruit juice", "Shampoo", "Cigarettes"]
+product_info = [
+     {"rate": 100, "tax": 5, "product": "Edible Oil" },
+     {"rate": 40, "tax": 12, "product": "Fruit Juice"},
+     {"rate": 150, "tax": 18, "product": "Shampoo"},
+     {"rate": 300, "tax" : 28, "product": "Cigarettes"}
+]
+product = input("Enter product name :").capitalize()
+qty = int(input("Enter quantity :"))
+buy_state = input("Enter buy state: ").capitalize()
+sell_state = input("Enter sell state: ").capitalize()
+print(product, qty, buy_state, sell_state)
+if product in product_list:
+    idx = product_list.index(product)
+    info = product_info[idx]
+    rate = info['rate']
+    tax = info['tax']
+    amount = rate * qty
+    if buy_state == sell_state:
+        cgst = amount * (tax * 0.5 / 100)
+        sgst = amount * (tax * 0.5 / 100)
+        igst = 0
+    else:
+        cgst = 0
+        sgst = 0
+        igst = amount * (tax  / 100)
+    print(f"""Total Amount: {amount} ₹
+Total GST: {cgst + sgst + igst} ₹
+SGST: {sgst} ₹
+CGST: {cgst} ₹
+IGST: {igst} ₹""")
+else:
+    print("Product not in catalogue")
